@@ -7,10 +7,10 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <x-nav-link href="/" :current="request()->is('/')"> Home</x-nav-link>
-                        <x-nav-link href="/posts" :current="request()->is('posts')">Blog</x-nav-link>
-                        <x-nav-link href="/about" :current="request()->is('about')">About</x-nav-link>
-                        <x-nav-link href="/contact" :current="request()->is('contact')">Contact</x-nav-link>
+                        <x-my-nav-link href="/" :current="request()->is('/')"> Home</x-my-nav-link>
+                        <x-my-nav-link href="/posts" :current="request()->is('posts')">Blog</x-my-nav-link>
+                        <x-my-nav-link href="/about" :current="request()->is('about')">About</x-my-nav-link>
+                        <x-my-nav-link href="/contact" :current="request()->is('contact')">Contact</x-my-nav-link>
                     </div>
                 </div>
             </div>
@@ -20,16 +20,31 @@
 
                     <!-- Profile dropdown -->
                     <el-dropdown class="relative ml-3">
-                        <button class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                        @if (Auth::check())
+                        <button class="relative flex max-w-xs items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 cursor-pointer">
                             <span class="absolute -inset-1.5"></span>
                             <span class="sr-only">Open user menu</span>
                             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-8 rounded-full outline -outline-offset-1 outline-white/10" />
+                            <div class="text-gray-300 text-sm font-medium ml-3">{{ Auth::user()->name }}</div>
+                            <div class="ms-1 text-gray-300">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
                         </button>
+                        @else
+                        <a href="/login" class="text-white text-sm font-medium">Login</a>
+                        <span class="text-white text-sm">|</span>
+                        <a href="/register" class="text-white text-sm font-medium">Register</a>
+                        @endif
 
                         <el-menu anchor="bottom end" popover class="w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Your profile</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Settings</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Sign out</a>
+                            <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Your profile</a>
+                            <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden">Settings</a>
+                            <form method="POST" action="/logout">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:outline-hidden cursor-pointer">Log out</button>
+                            </form>
                         </el-menu>
                     </el-dropdown>
                 </div>
@@ -52,27 +67,37 @@
 
     <el-disclosure id="mobile-menu" hidden class="block md:hidden">
         <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-            <x-nav-link class="block" href="/" :current="request()->is('/')"> Home</x-nav-link>
-           <x-nav-link href="/posts" :current="request()->is('posts')">Blog</x-nav-link>
-            <x-nav-link class="block" href="/about" :current="request()->is('about')">About</x-nav-link>
-            <x-nav-link class="block" href="/contact" :current="request()->is('contact')">Contact</x-nav-link>
+            <x-my-nav-link class="block" href="/" :current="request()->is('/')"> Home</x-my-nav-link>
+            <x-my-nav-link class="block" href="/posts" :current="request()->is('posts')">Blog</x-my-nav-link>
+            <x-my-nav-link class="block" href="/about" :current="request()->is('about')">About</x-my-nav-link>
+            <x-my-nav-link class="block" href="/contact" :current="request()->is('contact')">Contact</x-my-nav-link>
         </div>
         <div class="border-t border-white/10 pt-4 pb-3">
+            @if (Auth::check())
             <div class="flex items-center px-5">
                 <div class="shrink-0">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full outline -outline-offset-1 outline-white/10" />
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="{{ Auth::user()->name }}" class="size-10 rounded-full outline -outline-offset-1 outline-white/10" />
                 </div>
                 <div class="ml-3">
-                    <div class="text-base/5 font-medium text-white">Tom Cook</div>
-                    <div class="text-sm font-medium text-gray-400">tom@example.com</div>
+                    <div class="text-base/5 font-medium text-white">{{ Auth::user()->name }}</div>
+                    <div class="text-sm font-medium text-gray-400">{{ Auth::user()->email }}</div>
                 </div>
 
             </div>
             <div class="mt-3 space-y-1 px-2">
-                <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Your profile</a>
-                <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Settings</a>
-                <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Sign out</a>
+                <a href="/profile" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Your profile</a>
+                <a href="/dashboard" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Settings</a>
+                <form method="POST" action="/logout">
+                    @csrf
+                    <button type="submit" class="block w-full text-start rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Log out</button>
+                </form>
             </div>
+            @else
+            <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                <x-my-nav-link class="block" href="/login" :current="request()->is('login')">Login</x-my-nav-link>
+                <x-my-nav-link class="block" href="/register" :current="request()->is('register')">Register</x-my-nav-link>
+            </div>
+            @endif
         </div>
     </el-disclosure>
 </nav>
